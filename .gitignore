@@ -1,4 +1,25 @@
-# Chặn file cụ thể
-LD2011_2014.txt
-# Chặn file csv
-electricity.csv
+# DATA (KHÔNG PUSH)
+data/*
+!data/README.md
+
+# RESULTS / OUTPUT (NẾU CÓ)
+results/
+
+# JUPYTER
+.ipynb_checkpoints/
+
+# PYTHON CACHE
+__pycache__/
+*.pyc
+*.pyo
+
+# ENV / VENV
+.venv/
+env/
+.env
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
