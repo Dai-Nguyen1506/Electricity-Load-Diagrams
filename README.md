@@ -1,17 +1,40 @@
-# [cite_start]Mô hình hóa và Dự báo nhu cầu điện (Electricity Load Diagrams) [cite: 1, 4]
+# Electricity Load Forecasting Project
 
-## 1. Giới thiệu
-[cite_start]Dự án tập trung vào phân tích tính thời vụ phức tạp và dự báo nhu cầu điện năng[cite: 4, 95].
+## 1. Problem Description
+This project focuses on modeling and forecasting electricity load using
+multi-time-series data with strong seasonal patterns.
 
-## 2. Dữ liệu
-[cite_start]Sử dụng tập dữ liệu "Electricity Load Diagrams" từ HuggingFace/GluonTS[cite: 6, 7].
-- [cite_start]Tần suất: Hàng giờ/15 phút[cite: 16].
-- [cite_start]Quy mô: Nhiều chuỗi thời gian (người tiêu dùng)[cite: 15].
+## 2. Objectives
+- Explore and analyze electricity load data
+- Identify daily, weekly, and yearly seasonality
+- Build and compare forecasting models:
+  - Baseline
+  - Statistical (ARIMA / SARIMA)
+  - Machine Learning
+  - Deep Learning
+- Evaluate models using appropriate time-series metrics
 
-## [cite_start]3. Các mô hình triển khai [cite: 47]
-- [cite_start]Baseline: ARIMA, SARIMA[cite: 49, 106].
-- [cite_start]Machine Learning: XGBoost, LightGBM[cite: 55].
-- [cite_start]Deep Learning: LSTM, Transformer (thông qua GluonTS)[cite: 58, 59].
+## 3. Dataset
+- Source: Electricity Load Diagrams Dataset
+- Provider: Hugging Face
+- Frequency: Hourly
+- Multiple consumers (panel data)
 
-## [cite_start]4. Đánh giá [cite: 60]
-[cite_start]Sử dụng các chỉ số: MAE, RMSE, MAPE[cite: 63, 137].
+## 4. Project Structure
+(Describe thư mục notebooks, src, data, report)
+
+## 5. Evaluation Metrics
+- MAE
+- RMSE
+- MAPE
+
+## 6. Tools & Libraries
+- pandas, numpy
+- statsmodels
+- scikit-learn
+- PyTorch / TensorFlow (DL models)
+
+## 7. How to Run
+1. Download data
+2. Run notebooks in order
+3. Generate report

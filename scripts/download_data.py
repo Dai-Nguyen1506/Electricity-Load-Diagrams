@@ -1,10 +1,18 @@
-import sys
-import os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+"""
+Script to download electricity load data manually or via HF.
+"""
 
-from src.data_loader import download_hf_dataset, save_raw_data
+from datasets import load_dataset
+import pandas as pd
+from pathlib import Path
+
+def download_data():
+    dataset = load_dataset("tulipa762/electricity_load_diagrams", split="train")
+    df = dataset.to_pandas()
+
+    output_path = Path("data/raw")
+    output_path.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_path / "electricity.csv", index=False)
 
 if __name__ == "__main__":
-    df = download_hf_dataset()
-    save_raw_data(df)
-    print("Xong! Dữ liệu đã được lưu vào data/raw/")
+    download_data()

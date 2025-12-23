@@ -1,25 +1,20 @@
-import numpy as np
-import pandas as pd
-import holidays
+"""
+Feature engineering for time series forecasting.
+"""
 
-def add_fourier_features(df, periods=[96, 672], n_order=5):
-    """Tạo các biến Sin/Cos để bắt chu kỳ ngày và tuần"""
-    for period in periods:
-        for i in range(1, n_order + 1):
-            df[f'fourier_sin_{period}_{i}'] = np.sin(2 * np.pi * i * df.index.hour / period)
-            df[f'fourier_cos_{period}_{i}'] = np.cos(2 * np.pi * i * df.index.hour / period)
+def add_time_features(df):
+    df["hour"] = df.index.hour
+    df["weekday"] = df.index.weekday
+    df["month"] = df.index.month
+    df["is_weekend"] = df["weekday"].isin([5, 6]).astype(int)
     return df
 
-def add_holiday_features(df, country='VN'):
-    """Đánh dấu các ngày lễ (ảnh hưởng mạnh đến tải điện)"""
-    vn_holidays = holidays.CountryHoliday(country)
-    df['is_holiday'] = df.index.map(lambda x: 1 if x in vn_holidays else 0)
+def add_lag_features(df, lags=(1, 24, 168)):
+    for lag in lags:
+        df[f"lag_{lag}"] = df["load"].shift(lag)
     return df
 
-def create_advanced_features(df):
-    df = add_fourier_features(df)
-    df = add_holiday_features(df)
-    # Lag features cho mô hình ML
-    for lag in [1, 96, 672]:
-        df[f'lag_{lag}'] = df['consumption'].shift(lag)
-    return df.dropna()
+def add_rolling_features(df):
+    df["rolling_24_mean"] = df["load"].rolling(24).mean()
+    df["rolling_168_mean"] = df["load"].rolling(168).mean()
+    return df

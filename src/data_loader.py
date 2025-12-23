@@ -1,12 +1,19 @@
-from datasets import load_dataset
+"""
+Data loading utilities for electricity load dataset.
+"""
+
 import pandas as pd
-from src.config import DATA_RAW
+from pathlib import Path
 
-def download_hf_dataset(repo_id="tulipa762/electricity_load_diagrams"):
-    print(f"Downloading {repo_id}...")
-    dataset = load_dataset(repo_id)
-    df = pd.DataFrame(dataset['train']) # Hoặc 'test' tùy cấu trúc HF
-    return df
+RAW_DATA_PATH = Path("data/raw/electricity.csv")
 
-def save_raw_data(df, filename="electricity_raw.csv"):
-    df.to_csv(f"{DATA_RAW}/{filename}", index=False)
+def load_raw_data() -> pd.DataFrame:
+    """
+    Load raw electricity load data.
+
+    Returns
+    -------
+    pd.DataFrame
+        Raw dataset
+    """
+    return pd.read_csv(RAW_DATA_PATH)
