@@ -1,18 +1,33 @@
 """
-Script to download electricity load data manually or via HF.
+Script to download Electricity Load Diagrams dataset
+from Hugging Face and save as CSV.
 """
 
 from datasets import load_dataset
 import pandas as pd
 from pathlib import Path
 
+
 def download_data():
-    dataset = load_dataset("tulipa762/electricity_load_diagrams", split="train")
+    print("Downloading dataset from Hugging Face...")
+
+    dataset = load_dataset(
+        "tulipa762/electricity_load_diagrams",
+        split="train",
+        trust_remote_code=True
+    )
+
+    print("Converting to pandas DataFrame...")
     df = dataset.to_pandas()
 
-    output_path = Path("data/raw")
-    output_path.mkdir(parents=True, exist_ok=True)
-    df.to_csv(output_path / "electricity.csv", index=False)
+    output_dir = Path("data/raw")
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    output_file = output_dir / "electricity.csv"
+    df.to_csv(output_file, index=False)
+
+    print(f"Dataset saved to {output_file}")
+
 
 if __name__ == "__main__":
     download_data()
