@@ -1,9 +1,10 @@
+datasets
 pandas
 numpy
 matplotlib
 seaborn
 scikit-learn
+xgboost
 statsmodels
-gluonts
-mxnet
-huggingface_hub
+prophet
+torch

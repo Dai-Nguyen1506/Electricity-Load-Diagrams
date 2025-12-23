@@ -1,12 +1,12 @@
+from datasets import load_dataset
 import pandas as pd
-from gluonts.dataset.repository.datasets import get_dataset
+from src.config import DATA_RAW
 
-def load_from_gluonts():
-    """Tải dữ liệu electricity từ GluonTS [cite: 10]"""
-    dataset = get_dataset("electricity")
-    return dataset.train, dataset.test
+def download_hf_dataset(repo_id="tulipa762/electricity_load_diagrams"):
+    print(f"Downloading {repo_id}...")
+    dataset = load_dataset(repo_id)
+    df = pd.DataFrame(dataset['train']) # Hoặc 'test' tùy cấu trúc HF
+    return df
 
-def load_local_txt(file_path):
-    """Đọc file LD2011_2014.txt [cite: 11]"""
-    # Cần xử lý định dạng dấu thập phân và dấu phẩy của file gốc
-    return pd.read_csv(file_path, sep=';', decimal=',')
+def save_raw_data(df, filename="electricity_raw.csv"):
+    df.to_csv(f"{DATA_RAW}/{filename}", index=False)
