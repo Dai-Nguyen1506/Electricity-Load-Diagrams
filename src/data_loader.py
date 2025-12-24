@@ -20,12 +20,9 @@ def load_raw_data() -> pd.DataFrame:
         raise FileNotFoundError(f"Không tìm thấy file tại {full_path}")
         
     # 1. Đọc thử 1 dòng để kiểm tra separator nếu cần
-    # Thử với dấu phẩy (,) trước, nếu lỗi "Unknown datetime" vẫn còn, 
-    # hãy đổi sep="," thành sep=";" bên dưới.
-    
     df = pd.read_csv(
         full_path,
-        sep=",",                  # Nếu vẫn lỗi, hãy thử đổi thành sep=";"
+        sep=",",
         index_col=0,                      
         low_memory=False
     )
@@ -44,10 +41,5 @@ def load_raw_data() -> pd.DataFrame:
     # 3. Đặt tên Index và sắp xếp
     df.index.name = 'timestamp'
     df.sort_index(inplace=True)
-    
-    # 4. Đảm bảo dữ liệu là kiểu số (float)
-    # Đôi khi dữ liệu UCI dùng dấu phẩy cho số thập phân (ví dụ: 0,12)
-    # Nếu dữ liệu của bạn bị nhận nhầm là kiểu 'object', hãy dùng dòng dưới:
-    # df = df.apply(pd.to_numeric, errors='coerce')
-    
+
     return df
