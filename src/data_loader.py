@@ -1,6 +1,3 @@
-"""
-Data loading utilities for electricity load dataset.
-"""
 import pandas as pd
 from pathlib import Path
 import os
@@ -10,10 +7,8 @@ RAW_DATA_PATH = Path("data/raw/electricity_data.csv")
 
 def load_raw_data() -> pd.DataFrame:
     """
-    Nạp dữ liệu thô, tự động xử lý Index thành kiểu Timestamp chuẩn.
-    Kết quả: Index là 'timestamp' (datetime64), các cột bắt đầu từ 'MT_001'.
+    Nạp dữ liệu thô và xử lý lỗi định dạng ngày tháng/dấu phân cách.
     """
-    # 1. Xử lý đường dẫn
     try:
         base_path = Path(__file__).parent.parent
     except NameError:
@@ -24,24 +19,35 @@ def load_raw_data() -> pd.DataFrame:
     if not full_path.exists():
         raise FileNotFoundError(f"Không tìm thấy file tại {full_path}")
         
-    # 2. Nạp dữ liệu
-    # index_col=0: Đưa cột thời gian vào Index ngay lập tức
-    # parse_dates=True: Thử convert sang datetime ngay khi đọc
+    # 1. Đọc thử 1 dòng để kiểm tra separator nếu cần
+    # Thử với dấu phẩy (,) trước, nếu lỗi "Unknown datetime" vẫn còn, 
+    # hãy đổi sep="," thành sep=";" bên dưới.
+    
     df = pd.read_csv(
-        full_path, 
-        sep=';', 
-        decimal=',', 
-        index_col=0, 
-        parse_dates=True, 
+        full_path,
+        sep=",",                  # Nếu vẫn lỗi, hãy thử đổi thành sep=";"
+        index_col=0,                      
         low_memory=False
     )
     
-    # 3. Ép kiểu dữ liệu Index (Phòng trường hợp parse_dates không tự nhận diện được format lạ)
-    if not isinstance(df.index, pd.DatetimeIndex):
-        df.index = pd.to_datetime(df.index)
+    # 2. Xử lý Index sau khi nạp (An toàn hơn parse_dates trong read_csv)
+    # Ép kiểu index về datetime, bỏ qua các lỗi nếu có để debug
+    try:
+        df.index = pd.to_datetime(df.index, format="%Y-%m-%d %H:%M:%S", errors='coerce')
+    except Exception:
+        # Nếu format trên lỗi, để pandas tự suy luận
+        df.index = pd.to_datetime(df.index, errors='coerce')
+
+    # Loại bỏ các dòng không convert được ngày tháng (nếu có dòng header thừa)
+    df = df[df.index.notnull()]
     
-    # 4. Đặt tên Index và sắp xếp
+    # 3. Đặt tên Index và sắp xếp
     df.index.name = 'timestamp'
     df.sort_index(inplace=True)
+    
+    # 4. Đảm bảo dữ liệu là kiểu số (float)
+    # Đôi khi dữ liệu UCI dùng dấu phẩy cho số thập phân (ví dụ: 0,12)
+    # Nếu dữ liệu của bạn bị nhận nhầm là kiểu 'object', hãy dùng dòng dưới:
+    # df = df.apply(pd.to_numeric, errors='coerce')
     
     return df
