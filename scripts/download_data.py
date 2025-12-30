@@ -40,9 +40,9 @@ def download_and_convert():
         print(f"✅ HOÀN THÀNH! File CSV sẵn sàng tại: {csv_path}")
         print(f"📊 Thông tin dữ liệu: {df.shape[0]} dòng, {df.shape[1]} cột.")
         
-        # Tùy chọn: Xóa file .txt cũ để tiết kiệm bộ nhớ
-        # os.remove(txt_path)
-        # print("🗑️ Đã xóa file .txt tạm thời để tiết kiệm ổ cứng.")
+        # Xóa file .txt cũ để tiết kiệm bộ nhớ
+        os.remove(txt_path)
+        print("🗑️ Đã xóa file .txt tạm thời để tiết kiệm ổ cứng.")
 
     except Exception as e:
         print(f"❌ Lỗi khi chuyển đổi: {e}")
