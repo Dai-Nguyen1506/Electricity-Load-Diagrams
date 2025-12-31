@@ -3,12 +3,9 @@ from pathlib import Path
 import os
 
 # Relative path from the project root directory
-RAW_DATA_PATH = Path("data/raw/electricity_data.csv")
+RAW_DATA_PATH = Path("data/raw/electricity_data.parquet")
 
-def load_raw_data() -> pd.DataFrame:
-    """
-    Load raw data and handle date/time format and delimiter issues.
-    """
+def load_raw_data(columns: list[str] | None = None) -> pd.DataFrame:
     try:
         base_path = Path(__file__).parent.parent
     except NameError:
@@ -17,33 +14,21 @@ def load_raw_data() -> pd.DataFrame:
     full_path = base_path / RAW_DATA_PATH
 
     if not full_path.exists():
-        raise FileNotFoundError(f"Không tìm thấy file tại {full_path}")
+        raise FileNotFoundError(f"File not found at {full_path}")
         
-    # 1. Read the file (separator is fixed as ',' for converted CSV)
-    df = pd.read_csv(
-        full_path,
-        sep=",",
-        index_col=0,                      
-        low_memory=False
-    )
+    # Read Parquet
+    df = pd.read_parquet(full_path, columns=columns)
     
-    # 2. Process index after loading (safer than using parse_dates in read_csv)
-    # Force index to datetime, ignore errors for debugging purposes
-    try:
-        df.index = pd.to_datetime(
-            df.index,
-            format="%Y-%m-%d %H:%M:%S",
-            errors='coerce'
-        )
-    except Exception:
-        # If the format above fails, let pandas infer automatically
-        df.index = pd.to_datetime(df.index, errors='coerce')
+    # Set Timestamp (first column) as index
+    first_col = df.columns[0]
+    df[first_col] = pd.to_datetime(df[first_col], errors="coerce")
+    df.set_index(first_col, inplace=True)
 
-    # Drop rows where datetime conversion failed (e.g., extra header rows)
+    # Drop invalid timestamps
     df = df[df.index.notnull()]
 
-    # 3. Set index name and sort by time 
-    df.index.name = 'timestamp'
+    # Set index name and sort
+    df.index.name = "Timestamp"
     df.sort_index(inplace=True)
 
     return df

@@ -3,6 +3,8 @@ import requests
 import zipfile
 import io
 import pandas as pd
+import pyarrow as pa
+import pyarrow.parquet as pq
 
 def download_and_convert():
     # 1. Configure paths
@@ -11,7 +13,7 @@ def download_and_convert():
     os.makedirs(raw_dir, exist_ok=True)
     
     txt_path = os.path.join(raw_dir, "LD2011_2014.txt")
-    csv_path = os.path.join(raw_dir, "electricity_data.csv")
+    parquet_path = "data/raw/electricity_data.parquet"
 
     # 2. Download and extract (if txt file does not exist)
     if not os.path.exists(txt_path):
@@ -26,18 +28,17 @@ def download_and_convert():
             return
 
     # 3. Convert to standard CSV
-    print("🔄 Converting .txt format to standard .csv...")
-    print("⚠️ Note: The original file is quite large (1.2GB), so this process may take 1-2 minutes depending on your machine's RAM.")
+    print("🔄 Converting .txt format to standard .parquet...")
     
     try:
         # Read file using UCI format: sep=';', decimal=','
         # low_memory=False ensures more stable handling of large files
         df = pd.read_csv(txt_path, sep=';', decimal=',', low_memory=False)
 
-        # Save as standard CSV: sep=',', decimal='.'
-        df.to_csv(csv_path, index=False)
+        # Save as standard parquet
+        df.to_parquet(parquet_path,engine="pyarrow",compression="snappy")
         
-        print(f"✅ DONE! CSV file is ready at: {csv_path}")
+        print(f"✅ DONE! Parquet file is ready at: {parquet_path}")
         print(f"📊 Dataset info: {df.shape[0]} rows, {df.shape[1]} columns.")
         
         # Remove old .txt file to save disk space
