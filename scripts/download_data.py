@@ -5,7 +5,7 @@ import io
 import pandas as pd
 
 def download_and_convert():
-    # 1. Cấu hình đường dẫn
+    # 1. Configure paths
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00321/LD2011_2014.txt.zip"
     raw_dir = "data/raw"
     os.makedirs(raw_dir, exist_ok=True)
@@ -13,39 +13,39 @@ def download_and_convert():
     txt_path = os.path.join(raw_dir, "LD2011_2014.txt")
     csv_path = os.path.join(raw_dir, "electricity_data.csv")
 
-    # 2. Tải và giải nén (nếu chưa có file txt)
+    # 2. Download and extract (if txt file does not exist)
     if not os.path.exists(txt_path):
-        print("⏳ Đang tải dữ liệu từ UCI (250MB ZIP)...")
+        print("⏳ Downloading data from UCI (250MB ZIP)...")
         try:
             response = requests.get(url)
             with zipfile.ZipFile(io.BytesIO(response.content)) as z:
                 z.extractall(raw_dir)
-            print("✅ Đã giải nén thành công file .txt")
+            print("✅ Successfully extracted the .txt file")
         except Exception as e:
-            print(f"❌ Lỗi tải file: {e}")
+            print(f"❌ Download error: {e}")
             return
 
-    # 3. Chuyển đổi sang CSV chuẩn
-    print("🔄 Đang chuyển đổi định dạng .txt sang .csv chuẩn...")
-    print("⚠️ Lưu ý: File gốc khá lớn (1.2GB), quá trình này có thể mất 1-2 phút tùy vào RAM máy bạn.")
+    # 3. Convert to standard CSV
+    print("🔄 Converting .txt format to standard .csv...")
+    print("⚠️ Note: The original file is quite large (1.2GB), so this process may take 1-2 minutes depending on your machine's RAM.")
     
     try:
-        # Đọc file với cấu hình của UCI: sep=';', decimal=','
-        # low_memory=False giúp xử lý dữ liệu lớn ổn định hơn
+        # Read file using UCI format: sep=';', decimal=','
+        # low_memory=False ensures more stable handling of large files
         df = pd.read_csv(txt_path, sep=';', decimal=',', low_memory=False)
-        
-        # Lưu thành CSV chuẩn: sep=',', decimal='.'
+
+        # Save as standard CSV: sep=',', decimal='.'
         df.to_csv(csv_path, index=False)
         
-        print(f"✅ HOÀN THÀNH! File CSV sẵn sàng tại: {csv_path}")
-        print(f"📊 Thông tin dữ liệu: {df.shape[0]} dòng, {df.shape[1]} cột.")
+        print(f"✅ DONE! CSV file is ready at: {csv_path}")
+        print(f"📊 Dataset info: {df.shape[0]} rows, {df.shape[1]} columns.")
         
-        # Xóa file .txt cũ để tiết kiệm bộ nhớ
+        # Remove old .txt file to save disk space
         os.remove(txt_path)
-        print("🗑️ Đã xóa file .txt tạm thời để tiết kiệm ổ cứng.")
+        print("🗑️ Temporary .txt file deleted to save disk space.")
 
     except Exception as e:
-        print(f"❌ Lỗi khi chuyển đổi: {e}")
+        print(f"❌ Conversion error: {e}")
 
 if __name__ == "__main__":
     download_and_convert()

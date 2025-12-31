@@ -2,12 +2,12 @@ import pandas as pd
 from pathlib import Path
 import os
 
-# Đường dẫn tương đối từ thư mục gốc của dự án
+# Relative path from the project root directory
 RAW_DATA_PATH = Path("data/raw/electricity_data.csv")
 
 def load_raw_data() -> pd.DataFrame:
     """
-    Nạp dữ liệu thô và xử lý lỗi định dạng ngày tháng/dấu phân cách.
+    Load raw data and handle date/time format and delimiter issues.
     """
     try:
         base_path = Path(__file__).parent.parent
@@ -19,7 +19,7 @@ def load_raw_data() -> pd.DataFrame:
     if not full_path.exists():
         raise FileNotFoundError(f"Không tìm thấy file tại {full_path}")
         
-    # 1. Đọc thử 1 dòng để kiểm tra separator nếu cần
+    # 1. Read the file (separator is fixed as ',' for converted CSV)
     df = pd.read_csv(
         full_path,
         sep=",",
@@ -27,18 +27,22 @@ def load_raw_data() -> pd.DataFrame:
         low_memory=False
     )
     
-    # 2. Xử lý Index sau khi nạp (An toàn hơn parse_dates trong read_csv)
-    # Ép kiểu index về datetime, bỏ qua các lỗi nếu có để debug
+    # 2. Process index after loading (safer than using parse_dates in read_csv)
+    # Force index to datetime, ignore errors for debugging purposes
     try:
-        df.index = pd.to_datetime(df.index, format="%Y-%m-%d %H:%M:%S", errors='coerce')
+        df.index = pd.to_datetime(
+            df.index,
+            format="%Y-%m-%d %H:%M:%S",
+            errors='coerce'
+        )
     except Exception:
-        # Nếu format trên lỗi, để pandas tự suy luận
+        # If the format above fails, let pandas infer automatically
         df.index = pd.to_datetime(df.index, errors='coerce')
 
-    # Loại bỏ các dòng không convert được ngày tháng (nếu có dòng header thừa)
+    # Drop rows where datetime conversion failed (e.g., extra header rows)
     df = df[df.index.notnull()]
-    
-    # 3. Đặt tên Index và sắp xếp
+
+    # 3. Set index name and sort by time 
     df.index.name = 'timestamp'
     df.sort_index(inplace=True)
 
