@@ -4,16 +4,11 @@ from pathlib import Path
 def load_data(file_path: str, nrows: int | None = None) -> pd.DataFrame:
     base_path = Path(__file__).resolve().parents[1]
     full_path = base_path / file_path
-    # Fallback to current directory if file not found (for notebook execution)
-    if not full_path.exists():
-        fallback_path = Path.cwd().parent / RAW_DATA_PARQUET
-        if fallback_path.exists():
-            full_path = fallback_path
-
-    print(f"👉 Loading: {file_path}")
 
     if not full_path.exists():
         raise FileNotFoundError(f"❌ File not found: {full_path}")
+    
+    print(f"👉 Loading: {file_path}")
     
     # ===== READ PARQUET =====
     df = pd.read_parquet(full_path)
