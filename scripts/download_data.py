@@ -8,7 +8,7 @@ from requests.exceptions import RequestException, Timeout
 def download_and_convert():
     # 1. Configure paths
     url = "https://archive.ics.uci.edu/ml/machine-learning-databases/00321/LD2011_2014.txt.zip"
-    raw_dir = "data/raw"
+    raw_dir = "c:/dataset/Electricity-Load-Diagrams/data/raw"
     os.makedirs(raw_dir, exist_ok=True)
     
     txt_path = os.path.join(raw_dir, "LD2011_2014.txt")
