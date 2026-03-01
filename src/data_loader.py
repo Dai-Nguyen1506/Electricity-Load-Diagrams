@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from pathlib import Path
 
@@ -42,3 +43,10 @@ def load_raw_data(nrows: int | None = None) -> pd.DataFrame:
     df = df.astype("float64")
 
     return df
+
+def save_file(df, file_path):
+    save_dir = "../data/processed"
+    os.makedirs(save_dir, exist_ok=True)
+    save_path = os.path.join(save_dir, file_path)
+    df.to_parquet(save_path, index=True)
+    print(f"File saved as: {save_path}")
