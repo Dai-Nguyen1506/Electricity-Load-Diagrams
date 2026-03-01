@@ -2,7 +2,7 @@
 Global configuration for the project.
 """
 
-FREQUENCY = "15T"  # 15 minutes
+FREQUENCY = "H"  # Hourly data
 
 SEASONALITY = {
     "daily": 24,
