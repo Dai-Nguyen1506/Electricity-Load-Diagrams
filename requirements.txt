@@ -25,3 +25,7 @@ fsspec>=2023.10.0
 # Utilities
 tqdm>=4.66
 ipykernel>=6.25
+
+# Weather data
+meteostat
+cdsapi
