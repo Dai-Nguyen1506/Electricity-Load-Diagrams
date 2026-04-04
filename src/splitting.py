@@ -1,9 +1,12 @@
 """
 Time-series splitting utilities.
 """
+import pandas as pd
 
-def time_train_test_split(df, test_size=0.2):
-    split_index = int(len(df) * (1 - test_size))
-    train = df.iloc[:split_index]
-    test = df.iloc[split_index:]
+def time_train_test_split(df, split_date="2014-01-01"):
+    df = df.sort_index()
+    
+    train = df.loc[df.index < split_date]
+    test = df.loc[df.index >= split_date]
+    
     return train, test
