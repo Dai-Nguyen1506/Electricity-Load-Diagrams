@@ -4,9 +4,10 @@ Statistical forecasting models.
 
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 
-def train_sarima(series, order, seasonal_order):
+def train_sarima(train, exog=None, order=None, seasonal_order=None):
     model = SARIMAX(
-        series,
+        train,
+        exog=exog,
         order=order,
         seasonal_order=seasonal_order,
         enforce_stationarity=False,

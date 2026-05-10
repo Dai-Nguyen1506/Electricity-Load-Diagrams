@@ -1,9 +1,12 @@
 """
 Baseline forecasting models.
 """
+import pandas as pd
 
-def naive_forecast(series):
-    return series.shift(1)
+def naive_forecast(train, test):
+    last_value = train.iloc[-1, 0]
+    return pd.Series([last_value] * len(test), index=test.index)
 
-def seasonal_naive_forecast(series, seasonality=24):
-    return series.shift(seasonality)
+def seasonal_naive_forecast(df, test, season=7):
+    preds = [df.loc[t - pd.Timedelta(days=season), 'total_load'] for t in test.index]
+    return pd.Series(preds, index=test.index)
