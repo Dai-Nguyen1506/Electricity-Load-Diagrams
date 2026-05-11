@@ -1,6 +1,5 @@
 # DATA (KHÔNG PUSH)
-data/*
-!data/README.md
+data/
 
 # RESULTS / OUTPUT (NẾU CÓ)
 results/
