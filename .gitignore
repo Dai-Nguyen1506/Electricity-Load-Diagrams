@@ -1,0 +1,27 @@
+# DATA (KHÔNG PUSH)
+data/*
+!data/README.md
+
+# RESULTS / OUTPUT (NẾU CÓ)
+results/
+
+# JUPYTER
+.ipynb_checkpoints/
+
+# PYTHON CACHE
+__pycache__/
+*.pyc
+*.pyo
+
+# ENV / VENV
+.venv/
+venv/
+env/
+.env
+penv/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
