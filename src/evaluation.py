@@ -19,3 +19,18 @@ def evaluate(y_true, y_pred):
         "RMSE": round(np.sqrt(mean_squared_error(y_true, y_pred)), 2),
         "MAPE": round(mape, 2)
     }
+
+def highlight_table(s):
+    sorted_vals = s.dropna().sort_values()
+    min_val = sorted_vals.iloc[0]
+    second_val = sorted_vals.iloc[1] if len(sorted_vals) > 1 else None
+
+    styles = []
+    for v in s:
+        if v == min_val:
+            styles.append("font-weight: bold")
+        elif v == second_val:
+            styles.append("text-decoration: underline")
+        else:
+            styles.append("")
+    return styles
