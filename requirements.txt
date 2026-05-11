@@ -31,7 +31,7 @@ fsspec>=2023.10.0
 # Utilities
 tqdm>=4.66
 ipykernel>=6.25
+jupyterlab>=3.0
 
-# Weather data
-meteostat
-cdsapi
+# Data
+holidays>=0.14
