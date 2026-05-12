@@ -9,7 +9,7 @@ def load_data(file_path: str, nrows: int | None = None) -> pd.DataFrame:
     if not full_path.exists():
         raise FileNotFoundError(f"❌ File not found: {full_path}")
     
-    print(f"👉 Loading: {file_path}")
+    print(f"Loading: {file_path}")
     
     # ===== READ PARQUET =====
     df = pd.read_parquet(full_path)
