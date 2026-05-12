@@ -6,6 +6,8 @@ from sklearn.ensemble import RandomForestRegressor
 from lightgbm import LGBMRegressor
 from xgboost import XGBRegressor
 
+# Hide trial logs
+optuna.logging.set_verbosity(optuna.logging.WARNING)
 
 MODEL_CONFIGS = {
 
